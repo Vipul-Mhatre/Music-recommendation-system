@@ -4,29 +4,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Recommendation System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('templates/music1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            position: relative; 
+            overflow: auto; 
+        }
+
+        .music-symbol {
+            position: absolute;
+            font-size: 3rem;
+            animation: moveMusicSymbol 15s linear infinite;
+            opacity: 0.7;
+            transition: transform 0.5s ease-in-out;
+            z-index: -1; 
+        }
+
+        @keyframes moveMusicSymbol {
+            0% {
+                transform: translate(-100%, -100%);
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(100%, 100%);
+                opacity: 0.7;
+            }
+        }
+
+        .symbol1 { left: 5%; top: 10%; animation-duration: 14s; animation-delay: 1s; }
+        .symbol2 { left: 20%; top: 20%; animation-duration: 16s; animation-delay: 2s; }
+        .symbol3 { left: 40%; top: 30%; animation-duration: 18s; animation-delay: 3s; }
+        .symbol4 { left: 60%; top: 40%; animation-duration: 17s; animation-delay: 4s; }
+        .symbol5 { left: 80%; top: 50%; animation-duration: 15s; animation-delay: 5s; }
+        .symbol6 { left: 10%; top: 60%; animation-duration: 12s; animation-delay: 2s; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent bg */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 2; 
+            position: relative;
+        }
+
+        header h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #4CAF50;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        label {
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            font-size: 1rem;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+        }
+
+        .btn.primary {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        .btn.primary:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .btn.secondary {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        .btn.secondary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        #user-stats, #recommendation-list {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            section {
+                margin-bottom: 30px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="music-symbol symbol1">♪</div>
+    <div class="music-symbol symbol2">♫</div>
+    <div class="music-symbol symbol3">♪</div>
+    <div class="music-symbol symbol4">♫</div>
+    <div class="music-symbol symbol5">♪</div>
+    <div class="music-symbol symbol6">♫</div>
+    <div class="music-symbol symbol7">♪</div>
+    <div class="music-symbol symbol8">♫</div>
+    <div class="music-symbol symbol9">♪</div>
+    <div class="music-symbol symbol10">♫</div>
+    <div class="music-symbol symbol11">♪</div>
+    <div class="music-symbol symbol12">♫</div>
+
     <div class="container">
-        <h1>Welcome to the Music Recommendation System</h1>
+        <header>
+            <h1>Music Recommendation System</h1>
+        </header>
 
-        <div class="statistics">
-            <h2>User Statistics</h2>
-            <label for="user_id">Enter User ID:</label>
-            <input type="text" id="user_id" name="user_id">
+        <div class="content">
+            <section class="statistics">
+                <h2>User Statistics</h2>
+                <label for="user_id">Enter User ID:</label>
+                <input type="text" id="user_id" name="user_id" placeholder="Enter your user ID...">
+                <button class="btn primary" onclick="getUserStatistics()">Get Statistics</button>
 
-            <button onclick="getUserStatistics()">Get Statistics</button>
+                <div id="user-stats"></div>
+            </section>
 
-            <div id="user-stats">
-            </div>
-        </div>
+            <section class="recommendations">
+                <h2>Music Recommendations</h2>
+                <button class="btn secondary" onclick="getMusicRecommendations()">Get Recommendations</button>
 
-        <div class="recommendations">
-            <h2>Music Recommendations</h2>
-            <button onclick="getMusicRecommendations()">Get Recommendations</button>
-
-            <div id="recommendation-list">
-            </div>
+                <div id="recommendation-list"></div>
+            </section>
         </div>
     </div>
 
@@ -44,19 +246,22 @@
                 const data = await response.json();
 
                 if (data.error) {
-                    document.getElementById("user-stats").innerHTML = `<p style="color: red;">${data.error}</p>`;
+                    document.getElementById("user-stats").innerHTML = `<p class="error">${data.error}</p>`;
                 } else {
                     document.getElementById("user-stats").innerHTML = `
-                        <p>Total Tracks Listened: ${data.total_tracks_listened}</p>
-                        <p>Total Playcount: ${data.total_playcount}</p>
-                        <p>Average Playcount: ${data.average_playcount}</p>
-                        <p>Unique Tracks: ${data.unique_tracks}</p>
+                        <div class="stat-card">
+                            <p><strong>Total Tracks Listened:</strong> ${data.total_tracks_listened}</p>
+                            <p><strong>Total Playcount:</strong> ${data.total_playcount}</p>
+                            <p><strong>Average Playcount:</strong> ${data.average_playcount}</p>
+                            <p><strong>Unique Tracks:</strong> ${data.unique_tracks}</p>
+                        </div>
                     `;
                 }
             } catch (error) {
                 alert("Error fetching user statistics: " + error);
             }
         }
+
         async function getMusicRecommendations() {
             const userId = document.getElementById("user_id").value;
 
