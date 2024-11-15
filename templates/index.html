@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Music Recommendation System</h1>
+
+        <div class="statistics">
+            <h2>User Statistics</h2>
+            <label for="user_id">Enter User ID:</label>
+            <input type="text" id="user_id" name="user_id">
+
+            <button onclick="getUserStatistics()">Get Statistics</button>
+
+            <div id="user-stats">
+            </div>
+        </div>
+
+        <div class="recommendations">
+            <h2>Music Recommendations</h2>
+            <button onclick="getMusicRecommendations()">Get Recommendations</button>
+
+            <div id="recommendation-list">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getUserStatistics() {
+            const userId = document.getElementById("user_id").value;
+
+            if (!userId) {
+                alert("Please enter a user ID");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/statistics?user_id=${userId}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById("user-stats").innerHTML = `<p style="color: red;">${data.error}</p>`;
+                } else {
+                    document.getElementById("user-stats").innerHTML = `
+                        <p>Total Tracks Listened: ${data.total_tracks_listened}</p>
+                        <p>Total Playcount: ${data.total_playcount}</p>
+                        <p>Average Playcount: ${data.average_playcount}</p>
+                        <p>Unique Tracks: ${data.unique_tracks}</p>
+                    `;
+                }
+            } catch (error) {
+                alert("Error fetching user statistics: " + error);
+            }
+        }
+        async function getMusicRecommendations() {
+            const userId = document.getElementById("user_id").value;
+
+            if (!userId) {
+                alert("Please enter a user ID");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/recommendations?user_id=${userId}`);
+                const data = await response.json();
+
+                if (Array.isArray(data) && data.length > 0) {
+                    let recommendationsHTML = "<ul>";
+                    data.forEach(track => {
+                        recommendationsHTML += `
+                            <li>
+                                <strong>${track.name}</strong> by ${track.artist} (Track ID: ${track.track_id})
+                            </li>
+                        `;
+                    });
+                    recommendationsHTML += "</ul>";
+                    document.getElementById("recommendation-list").innerHTML = recommendationsHTML;
+                } else {
+                    document.getElementById("recommendation-list").innerHTML = "<p>No recommendations found.</p>";
+                }
+            } catch (error) {
+                alert("Error fetching recommendations: " + error);
+            }
+        }
+    </script>
+</body>
+</html>
