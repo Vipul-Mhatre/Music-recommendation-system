@@ -1,4 +1,5 @@
 .env
+.venv
 requirements.txt
 
 test.py
